@@ -29,7 +29,7 @@ class Arduino:
                 self.log.error(e)
                 if _exception_count > 5:
                     self.log.error("Too many exceptions, stopping thread")
-                    break;
+                    break;t
                 continue
 
     def start(self):
