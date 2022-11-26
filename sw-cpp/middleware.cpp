@@ -28,7 +28,12 @@ void on_zoom_message( double deltatime, std::vector< unsigned char > *message, v
 void on_arduino_message(std::string message) {
     std::string command = message.substr(0, message.find(":"));
     message.erase(0, message.find(":") + std::string(":").length());
-    int num_effect = std::stoi(message);
+    int num_effect;
+    try {
+        num_effect = std::stoi(message);
+    } catch ( std::exception &error ) {
+        std::cerr << error.what();
+    }
 
     if (command.compare("on") * command.compare("off") != 0) {
         return;
@@ -42,7 +47,7 @@ int main(int argc, char **argv) {
     Logger log = Logger("middleware");
     log.info("Starting middleware...");
 
-    arduino = new Arduino(std::string("/dev/cu.usbmodem141201"), 9600, &on_arduino_message);
+    arduino = new Arduino(std::string("/dev/cu.usbmodem144201"), 115200, &on_arduino_message);
     arduino->start();
 
     zoom = new ZoomG3Xn("ZOOM", &on_zoom_message);

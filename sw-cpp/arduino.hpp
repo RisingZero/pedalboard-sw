@@ -15,6 +15,7 @@ class Arduino {
     void (*callback)(std::string message);
 
     Arduino(std::string port, int baudrate, void (*on_message)(std::string));
+    ~Arduino();
     void start();
     void send(std::string message);
 };

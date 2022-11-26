@@ -38,6 +38,7 @@ Arduino::Arduino(std::string port, int baudrate, void (*on_message)(std::string)
         exit( EXIT_FAILURE );
     }
     callback = on_message;
+    log->info("Arduino connected, sending START signal");
 }
 
 void Arduino::start() {
@@ -46,9 +47,11 @@ void Arduino::start() {
             tty->open();
         }
 
-        sleep(2);
+        sleep(4);
 
-        tty->write("START\n");
+        tty->write(std::string("START"));
+        tty->flushOutput();
+        log->info("Waiting OK signal");
         bool started = false;
         while (!started) {
             if (tty->available()) {
@@ -76,4 +79,11 @@ void Arduino::send(std::string message) {
         log->error("Error connecting to Arduino");
         exit( EXIT_FAILURE );
     }
+}
+
+Arduino::~Arduino() {
+    tty->close();
+    delete tty;
+    delete log;
+    delete thread;
 }
